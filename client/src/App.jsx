@@ -3,8 +3,8 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { PrivateRoute } from './Components/PrivateRoute';
 import React, { Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './Components/ErrorBoundary';
+import {ErrorBoundary} from './Components/ErrorBoundaryV2';
 
 const Home = React.lazy(() => import('./Components/Home'));
 const Login = React.lazy(() => import('./Components/Login'));

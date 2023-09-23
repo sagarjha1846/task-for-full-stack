@@ -17,9 +17,7 @@ export default defineConfig({
   build: {
     outDir: 'build',
     chunkSizeWarningLimit: 5000, // Adjust the chunk size warning limit to 500 kBs
-    rollupOptions: {
-      external: ['react-error-boundary'],
-    },
+    rollupOptions: {},
     // You need to change this between build runs to reproduce
     chunkFileNames: `assets/[name]-[hash].js`,
     entryFileNames: `assets/[name]-[hash].js`,

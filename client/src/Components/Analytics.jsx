@@ -7,8 +7,8 @@ import {
   getMappedData,
   getUniqueArrayOfEle,
 } from '../utils';
-import { ErrorBoundary } from 'react-error-boundary';
 import ErrorFallback from './ErrorBoundary';
+import {ErrorBoundary} from './ErrorBoundaryV2';
 
 const TableComponent = React.lazy(() => import('./TableComponent'));
 const GraphComponent = React.lazy(() => import('./GraphComponent'));
