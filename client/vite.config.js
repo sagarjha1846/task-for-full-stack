@@ -15,6 +15,7 @@ export default defineConfig({
   },
 
   build: {
+    outDir: 'build',
     chunkSizeWarningLimit: 5000, // Adjust the chunk size warning limit to 500 kBs
     rollupOptions: {
       external: ['react-error-boundary'],
