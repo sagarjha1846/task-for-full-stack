@@ -26,6 +26,9 @@ const Login = () => {
         navigate('/');
       })
       .catch((err) => {
+        console.log('====================================');
+        console.log(err.message);
+        console.log('====================================');
         notification.error({
           message: err.response.data.error.message,
         });
