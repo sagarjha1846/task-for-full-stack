@@ -13,7 +13,10 @@ export default defineConfig({
     },
     // other output options...
     build: {
-      chunkSizeWarningLimit: 50000000, // Adjust the chunk size warning limit to 500 kBs
+      chunkSizeWarningLimit: 5000, // Adjust the chunk size warning limit to 500 kBs
+      // You need to change this between build runs to reproduce
+      chunkFileNames: `assets/[name]-[hash].js`,
+      entryFileNames: `assets/[name]-[hash].js`,
     },
   },
 

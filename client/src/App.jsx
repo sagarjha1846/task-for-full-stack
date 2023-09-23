@@ -1,10 +1,14 @@
 import { Layout } from 'antd';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import Login from './Components/Login';
-import Register from './Components/Register';
 import { PrivateRoute } from './Components/PrivateRoute';
-import Home from './Components/Home';
+import React, { Suspense } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorFallback from './Components/ErrorBoundary';
+
+const Home = React.lazy(() => import('./Components/Home'));
+const Login = React.lazy(() => import('./Components/Login'));
+const Register = React.lazy(() => import('./Components/Register'));
 
 function App() {
   return (
@@ -14,14 +18,18 @@ function App() {
         width: '100%',
         height: '100vh',
       }}>
-      <Routes>
-        <Route element={<PrivateRoute />}>
-          <Route path="/*" element={<Home />} />
-        </Route>
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <Routes>
+            <Route element={<PrivateRoute />}>
+              <Route path="/*" element={<Home />} />
+            </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+          </Routes>
+        </Suspense>
+      </ErrorBoundary>
     </Layout>
   );
 }

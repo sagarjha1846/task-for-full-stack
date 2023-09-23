@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview --port 8080"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",

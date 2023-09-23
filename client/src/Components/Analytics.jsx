@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
-import { useEffect, useState } from 'react';
-import GraphComponent from './GraphComponent';
-import TableComponent from './TableComponent';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getDataFromRes,
@@ -9,6 +7,11 @@ import {
   getMappedData,
   getUniqueArrayOfEle,
 } from '../utils';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorFallback from './ErrorBoundary';
+
+const TableComponent = React.lazy(() => import('./TableComponent'));
+const GraphComponent = React.lazy(() => import('./GraphComponent'));
 
 const Analytics = ({ jsonData, revenueType, setOptions }) => {
   const navigate = useNavigate();
@@ -138,25 +141,34 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
 
   return (
     <div className="">
-      <GraphComponent
-        columnsDef={columnsDef}
-        revenueType={revenueType}
-        listOfProduct={listOfProduct}
-        listOfRevenue={listOfRevenue}
-        jsonData={
-          jsonData
-            ? jsonData.filter((el) => el.sheetName === 'Data')[0].data
-            : null
-        }
-      />
-      <TableComponent
-        columnsDef={columnsDef}
-        data={data}
-        pagination={tableParams.pagination}
-        setTableParams={setTableParams}
-        tableParams={tableParams}
-        setData={setData}
-      />
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <GraphComponent
+            columnsDef={columnsDef}
+            revenueType={revenueType}
+            listOfProduct={listOfProduct}
+            listOfRevenue={listOfRevenue}
+            jsonData={
+              jsonData
+                ? jsonData.filter((el) => el.sheetName === 'Data')[0].data
+                : null
+            }
+          />
+        </Suspense>
+      </ErrorBoundary>
+
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Suspense fallback={<div>Loading...</div>}>
+          <TableComponent
+            columnsDef={columnsDef}
+            data={data}
+            pagination={tableParams.pagination}
+            setTableParams={setTableParams}
+            tableParams={tableParams}
+            setData={setData}
+          />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 };
