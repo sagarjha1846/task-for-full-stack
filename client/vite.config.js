@@ -1,54 +1,13 @@
-import { defineConfig, splitVendorChunkPlugin } from 'vite';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { createFilter } from '@rollup/pluginutils';
-import * as XLSX from 'xlsx';
-import { resolve } from 'path';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   output: {
     // other output options...
     build: {
-      chunkSizeWarningLimit: 100000000,
-      rollupOptions: {
-        input: {
-          main: resolve(__dirname, 'index.html'),
-          nested: resolve(__dirname, 'nested/index.html'),
-        },
-        output: {
-          manualChunks(id) {
-            if (id.includes('node_modules')) {
-              return id
-                .toString()
-                .split('node_modules/')[1]
-                .split('/')[0]
-                .toString();
-            }
-          },
-        },
-      },
-    },
-    manualChunks(id) {
-      // Specify how modules should be grouped into chunks
-      if (id.includes('node_modules')) {
-        return 'vendor'; // Group all modules from node_modules into a 'vendor' chunk
-      } else {
-        return 'main'; // Group all other modules into a 'main' chunk
-      }
+      chunkSizeWarningLimit: 500000, // Adjust the chunk size warning limit to 500 kBs
     },
   },
-  name: 'xlsx-plugin',
-  transform(code, id) {
-    const filter = createFilter(['**/*.xlsx']);
 
-    if (filter(id)) {
-      const workbook = XLSX.readFile(id);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-      const transformedCode = `export default ${JSON.stringify(jsonData)};`;
-      return transformedCode;
-    }
-  },
-  plugins: [react(), splitVendorChunkPlugin()],
+  plugins: [react()],
 });
