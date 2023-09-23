@@ -7,7 +7,7 @@ const Register = () => {
   const onFinish = (values) => {
     console.log('Success:', values);
     axios
-      .post('http://localhost:8000/user', values)
+      .post('https://task-backend-hwsj.onrender.com/user', values)
       .then((res) => {
         notification.success({
           message: res.data.data.message,
