@@ -5,9 +5,6 @@ import { UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
 const UploadComponent = ({ setJsonData }) => {
-  console.log('====================================');
-  console.log(XLSX);
-  console.log('====================================');
   const navigate = useNavigate();
   const readUploadFile = (file) => {
     const reader = new FileReader();

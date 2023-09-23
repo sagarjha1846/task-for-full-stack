@@ -3,6 +3,12 @@ import { useEffect, useState } from 'react';
 import GraphComponent from './GraphComponent';
 import TableComponent from './TableComponent';
 import { useNavigate } from 'react-router-dom';
+import {
+  getDataFromRes,
+  getFilteredData,
+  getMappedData,
+  getUniqueArrayOfEle,
+} from '../utils';
 
 const Analytics = ({ jsonData, revenueType, setOptions }) => {
   const navigate = useNavigate();
@@ -18,46 +24,81 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
     },
   });
 
-  useEffect(() => {
-    if (jsonData) {
-      const columns = jsonData?.filter((el) => el.sheetName === 'Dictionary');
+  const getConvertedCurrency = (data) => {
+    return data?.toLocaleString('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+    });
+  };
 
-      const columnsDef = columns[0]?.data.map((el) => ({
+  const getColumnDef = (data) => {
+    if (data)
+      return data.map((el) => ({
         title: el['Definition'],
         dataIndex: el['Column name'],
         type: el['Value Type'],
         sorter: (a, b) => sortedTableData(a, b, el['Column name']),
         render: (value) =>
-          listOfRevenue.includes(el['Column name'])
-            ? value?.toLocaleString('en-IN', {
-                style: 'currency',
-                currency: 'INR',
-              })
+          includesCheck(listOfRevenue, el['Column name'])
+            ? getConvertedCurrency(value)
             : value,
       }));
+  };
 
-      const data = jsonData.filter((el) => el.sheetName === 'Data');
-      const dataSource = data[0]?.data;
+  const getUniqueRevenue = (data) => {
+    const mappedData = getMappedData(data, 'revenue_type');
+    if (mappedData) return getUniqueArrayOfEle(mappedData);
+  };
 
-      setData(dataSource?.sort((a, b) => b.acv - a.acv));
+  const getMappedOptions = (data) => {
+    return data.map((el) => ({
+      value: el,
+      label: el,
+    }));
+  };
+
+  const includesCheck = (list, value) => {
+    return list.includes(value);
+  };
+
+  const getConvertedInt = (key) => {
+    return parseInt(key.split('-')[1]);
+  };
+
+  const getIncludeCheckRes = (key, field, list) => {
+    return includesCheck(list, field)
+      ? getConvertedInt(key[field])
+      : key[field];
+  };
+
+  useEffect(() => {
+    if (jsonData) {
+      const columns = getDataFromRes(
+        jsonData,
+        'Dictionary',
+        'data',
+        'sheetName'
+      );
+
+      const columnsDef = getColumnDef(columns);
+
+      const data = getDataFromRes(jsonData, 'Data', 'data', 'sheetName');
+
+      setData(data?.sort((a, b) => b.acv - a.acv));
 
       setColumnsDef(columnsDef);
-      setOptions(
-        [...new Set(data[0]?.data.map((el) => el.revenue_type))].map((el) => ({
-          value: el,
-          label: el,
-        }))
-      );
+
+      const uniqueSetOfRevenueType = getUniqueRevenue(data);
+
+      const revenueType = getMappedOptions(uniqueSetOfRevenueType);
+
+      setOptions(revenueType);
     }
   }, [jsonData]);
 
   const sortedTableData = (a, b, field) => {
-    const valueA = listOfProduct.includes(field)
-      ? parseInt(a[field].split('-')[1])
-      : a[field];
-    const valueB = listOfProduct.includes(field)
-      ? parseInt(b[field].split('-')[1])
-      : b[field];
+    const valueA = getIncludeCheckRes(a, field, listOfProduct);
+    const valueB = getIncludeCheckRes(b, field, listOfProduct);
 
     if (typeof valueA === 'number' && typeof valueB === 'number') {
       return valueA - valueB;
@@ -72,11 +113,21 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
 
   useEffect(() => {
     if (jsonData) {
-      const data = jsonData.filter((el) => el.sheetName === 'Data')[0]?.data;
+      const filterDataSource = getDataFromRes(
+        jsonData,
+        'Data',
+        'data',
+        'sheetName'
+      );
       if (revenueType) {
-        setData(data?.filter((el) => el.revenue_type === revenueType));
+        const data = getFilteredData(
+          filterDataSource,
+          'revenue_type',
+          revenueType
+        );
+        setData(data);
       } else {
-        setData(jsonData.filter((el) => el.sheetName === 'Data')[0]?.data);
+        setData(filterDataSource);
       }
     }
   }, [jsonData, revenueType, tableParams]);

@@ -5,6 +5,32 @@ import * as XLSX from "xlsx"
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  output: {
+    // other output options...
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks(id) {
+            if (id.includes('node_modules')) {
+              return id
+                .toString()
+                .split('node_modules/')[1]
+                .split('/')[0]
+                .toString();
+            }
+          },
+        },
+      },
+    },
+    manualChunks(id) {
+      // Specify how modules should be grouped into chunks
+      if (id.includes('node_modules')) {
+        return 'vendor'; // Group all modules from node_modules into a 'vendor' chunk
+      } else {
+        return 'main'; // Group all other modules into a 'main' chunk
+      }
+    },
+  },
   plugins: [
     react(),
     {
@@ -20,23 +46,6 @@ export default defineConfig({
           const transformedCode = `export default ${JSON.stringify(jsonData)};`;
           return transformedCode;
         }
-      },
-    },
-    {
-      build: {
-        rollupOptions: {
-          output: {
-            manualChunks(id) {
-              if (id.includes('node_modules')) {
-                return id
-                  .toString()
-                  .split('node_modules/')[1]
-                  .split('/')[0]
-                  .toString();
-              }
-            },
-          },
-        },
       },
     },
   ],

@@ -6,6 +6,12 @@ import HighchartsReact from 'highcharts-react-official';
 import { Button, Select } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
+import {
+  getFilteredData,
+  getMappedData,
+  getSumOfAllEleInList,
+  getUniqueArrayOfEle,
+} from '../utils';
 
 const GraphComponent = ({
   jsonData,
@@ -42,30 +48,27 @@ const GraphComponent = ({
 
   useEffect(() => {
     if (jsonData) {
-      const product = [
-        ...new Set(jsonData && jsonData.map((el) => el[yAxisSelectedFilter])),
-      ];
+      const productLists = getMappedData(jsonData, yAxisSelectedFilter);
+      const product = getUniqueArrayOfEle(productLists);
 
       const series = [];
 
       product.forEach((el) => {
         const productList = revenueType
-          ? jsonData.filter(
-              (item) =>
-                item[yAxisSelectedFilter] === el ||
-                item.revenue_type === revenueType
+          ? getFilteredData(
+              getFilteredData(jsonData, yAxisSelectedFilter, el),
+              'revenue_type',
+              revenueType
             )
-          : jsonData.filter((item) => item[yAxisSelectedFilter] === el);
+          : getFilteredData(jsonData, yAxisSelectedFilter, el);
 
         series.push({
           name: el,
           data: months.map((month) => {
-            const filteredData = productList.filter(
-              (item) => item.month === month
-            );
-            const totalACV = filteredData.reduce(
-              (sum, item) => sum + item[xAxisSelectedFilter],
-              0
+            const filteredData = getFilteredData(productList, 'month', month);
+            const totalACV = getSumOfAllEleInList(
+              filteredData,
+              xAxisSelectedFilter
             );
 
             return [month, totalACV];
@@ -147,6 +150,24 @@ const GraphComponent = ({
     setGraphOptions(graphOptions);
   }, [series]);
 
+  const getFilterOptions = (input, option) => {
+    (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
+  };
+
+  const getOptions = (columnsDef, list) => {
+    return (
+      columnsDef &&
+      list.map((el) => ({
+        value: el,
+        label: columnsDef.filter((item) => item.dataIndex === el)[0]?.title,
+      }))
+    );
+  };
+
+  const getTitle = (columnsDef, key) => {
+    return columnsDef.filter((el) => el.dataIndex === key)[0]?.title;
+  };
+
   return (
     <div className="w-full p-5 ">
       <div className="py-3 w-full flex justify-between align-middle content-center self-center items-center text-2xl font-bold  !font-sans">
@@ -155,21 +176,12 @@ const GraphComponent = ({
             className=" mb-4 text-2xl border-0 !border-collapse "
             onClick={() => navigate('/')}>
             <ArrowLeftOutlined />
-          </Button>{' '}
+          </Button>
           <div>
             {columnsDef ? (
               <div className=" capitalize">
-                {
-                  columnsDef.filter(
-                    (el) => el.dataIndex === yAxisSelectedFilter
-                  )[0]?.title
-                }{' '}
-                Vs{' '}
-                {
-                  columnsDef.filter(
-                    (el) => el.dataIndex === xAxisSelectedFilter
-                  )[0]?.title
-                }
+                {getTitle(columnsDef, yAxisSelectedFilter)} Vs{' '}
+                {getTitle(columnsDef, xAxisSelectedFilter)}
               </div>
             ) : null}
           </div>
@@ -180,21 +192,10 @@ const GraphComponent = ({
               className=" w-[300px] font-sans"
               placeholder="Select Revenue Type"
               defaultValue={xAxisSelectedFilter}
-              options={
-                columnsDef &&
-                listOfRevenue.map((el) => ({
-                  value: el,
-                  label: columnsDef.filter((item) => item.dataIndex === el)[0]
-                    ?.title,
-                }))
-              }
+              options={getOptions(columnsDef, listOfRevenue)}
               onChange={(value) => setXAxisSelectedFilter(value)}
               showSearch
-              filterOption={(input, option) =>
-                (option?.label ?? '')
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
+              filterOption={getFilterOptions}
             />
           </div>
           <div className="">
@@ -202,21 +203,10 @@ const GraphComponent = ({
               className=" w-[300px] font-sans"
               placeholder="Select Revenue Type"
               defaultValue={yAxisSelectedFilter}
-              options={
-                columnsDef &&
-                listOfProduct.slice(0, 2).map((el) => ({
-                  value: el,
-                  label: columnsDef.filter((item) => item.dataIndex === el)[0]
-                    ?.title,
-                }))
-              }
+              options={getOptions(columnsDef, listOfProduct.slice(0, 2))}
               onChange={(value) => setYAxisSelectedFilter(value)}
               showSearch
-              filterOption={(input, option) =>
-                (option?.label ?? '')
-                  .toLowerCase()
-                  .includes(input.toLowerCase())
-              }
+              filterOption={getFilterOptions}
             />
           </div>
         </div>
