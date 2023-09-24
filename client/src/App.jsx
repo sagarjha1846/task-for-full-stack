@@ -19,7 +19,12 @@ function App() {
         height: '100vh',
       }}>
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="w-screen h-screen flex justify-center items-center content-center">
+              Loading...
+            </div>
+          }>
           <Routes>
             <Route element={<PrivateRoute />}>
               <Route path="/*" element={<Home />} />

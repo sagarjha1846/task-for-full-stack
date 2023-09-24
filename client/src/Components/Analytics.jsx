@@ -142,7 +142,12 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
   return (
     <div className="">
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            <div className="w-screen h-screen flex justify-center items-center content-center">
+              Loading...
+            </div>
+          }>
           <GraphComponent
             columnsDef={columnsDef}
             revenueType={revenueType}
