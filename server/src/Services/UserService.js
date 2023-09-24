@@ -10,18 +10,30 @@ const userService = {
   loginUser: async (email, password) => {
     try {
       const getUserDetail = await genericServices.fetch({ email }, UserModel);
-      const compareHashPassword = await utils.compareHashPassword(
-        password,
-        getUserDetail.password
-      );
-      if (compareHashPassword) {
-        const token = await utils.generateToken({ id: getUserDetail.id });
-        return { ...getUserDetail, token };
+      if (getUserDetail) {
+        const compareHashPassword = await utils.compareHashPassword(
+          password,
+          getUserDetail.password
+        );
+        if (compareHashPassword) {
+          const token = await utils.generateToken({ id: getUserDetail.id });
+          return { ...getUserDetail, token };
+        } else {
+          throw {
+            statusCode: 403,
+            message: 'Email or Password is incorrect!',
+          };
+        }
       } else {
-        throw { statusCode: 403, message: 'Email or Password is incorrect!' };
+        throw {
+          statusCode: 403,
+          message: 'User not found!',
+        };
       }
+
+     
     } catch (error) {
-      throw { statusCode: 403, message: 'Email or Password is incorrect!' };
+      throw error;
     }
   },
   resetPassword: async (newPassword, oldPassword, id) => {
