@@ -14,15 +14,16 @@ const TableComponent = (props) => {
   };
 
   return (
-    <div className="p-5">
+    <div className="w-full p-5 rounded-md shadow-md bg-white">
       <Table
+        className="w-full"
         columns={columnsDef}
         dataSource={data}
         pagination={pagination}
         onChange={handleTableChange}
         scroll={{
           x: 1300,
-          y: 500,
+          y: 350,
         }}
       />
     </div>

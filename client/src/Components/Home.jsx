@@ -15,7 +15,7 @@ const Home = () => {
   const [options, setOptions] = useState([]);
   const [revenueType, setRevenueType] = useState('');
   return (
-    <div>
+    <div className=" bg-slate-200 w-full ">
       <Header
         style={{
           position: 'sticky',
@@ -25,8 +25,8 @@ const Home = () => {
           display: 'flex',
           alignItems: 'center',
         }}>
-        <div className="flex w-full justify-between align-middle content-center self-center items-center text-2xl font-bold text-white !font-sans">
-          <div className="">
+        <div className="flex w-full gap-2 justify-between align-middle content-center self-center items-center text-2xl font-bold  !font-sans ">
+          <div className="h-full m-5">
             {jsonData && (
               <Select
                 className=" w-[300px] font-sans"
@@ -43,8 +43,8 @@ const Home = () => {
               />
             )}
           </div>
-          <div className=" capitalize flex gap-4 justify-between items-center self-center content-center">
-            <div>
+          <div className=" capitalize flex gap-2 justify-between items-center self-center content-center">
+            <div className="text-white">
               Welcome, {userDetails.firstName} {userDetails.lastName}
             </div>
             <Button
@@ -58,30 +58,23 @@ const Home = () => {
           </div>
         </div>
       </Header>
-      <Content
-        className="site-layout bg-slate-200 w-full h-full"
-        style={{
-          padding: '20px 20px',
-          height: '100%',
-        }}>
-        <div className=" shadow-sm  p-5 bg-white rounded-md ">
-          <Routes>
-            <Route
-              path="/"
-              element={<UploadComponent setJsonData={setJsonData} />}
-            />
-            <Route
-              path="/analytic"
-              element={
-                <Analytics
-                  jsonData={jsonData}
-                  revenueType={revenueType}
-                  setOptions={setOptions}
-                />
-              }
-            />
-          </Routes>
-        </div>
+      <Content className=" bg-slate-200 w-full h-[100%] px-5 py-2">
+        <Routes>
+          <Route
+            path="/"
+            element={<UploadComponent setJsonData={setJsonData} />}
+          />
+          <Route
+            path="/analytic"
+            element={
+              <Analytics
+                jsonData={jsonData}
+                revenueType={revenueType}
+                setOptions={setOptions}
+              />
+            }
+          />
+        </Routes>
       </Content>
     </div>
   );

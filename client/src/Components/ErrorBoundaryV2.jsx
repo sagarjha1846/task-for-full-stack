@@ -11,7 +11,11 @@ export class ErrorBoundary extends React.Component {
   }
   render() {
     if (this.state.hasError) {
-      return <h1>{this.state.errorMessage}</h1>;
+      return (
+        <div className="w-screen h-screen flex justify-center items-center content-center">
+          {this.state.errorMessage}
+        </div>
+      );
     }
     return this.props.children;
   }

@@ -91,7 +91,7 @@ const GraphComponent = ({
 
       yAxis: {
         title: {
-          text: 'ACV',
+          text: xAxisSelectedFilter,
         },
         labels: {
           formatter: function () {
@@ -169,11 +169,11 @@ const GraphComponent = ({
   };
 
   return (
-    <div className="w-full p-5 ">
-      <div className="py-3 w-full flex justify-between align-middle content-center self-center items-center text-2xl font-bold  !font-sans">
-        <div className="gap-4 flex justify-evenly align-middle content-center self-center items-center text-2xl font-bold  !font-sans">
+    <div className="p-5 rounded-md shadow-md w-full bg-white">
+      <div className="p-3 w-full flex justify-between align-middle content-center self-center items-center text-2xl font-bold  !font-sans flex-wrap gap-5">
+        <div className="gap-4 flex justify-evenly align-middle content-center self-center items-center text-xl font-bold !font-sans">
           <Button
-            className=" mb-4 text-2xl border-0 !border-collapse "
+            className=" border-0 !border-collapse "
             onClick={() => navigate('/')}>
             <ArrowLeftOutlined />
           </Button>

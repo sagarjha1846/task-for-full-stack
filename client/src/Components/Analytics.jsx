@@ -9,6 +9,7 @@ import {
 } from '../utils';
 import ErrorFallback from './ErrorBoundary';
 import {ErrorBoundary} from './ErrorBoundaryV2';
+import { notification } from 'antd';
 
 const TableComponent = React.lazy(() => import('./TableComponent'));
 const GraphComponent = React.lazy(() => import('./GraphComponent'));
@@ -97,6 +98,8 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
 
       setOptions(revenueType);
     }
+
+    if (!jsonData) navigate('/');
   }, [jsonData]);
 
   const sortedTableData = (a, b, field) => {
@@ -136,11 +139,15 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
   }, [jsonData, revenueType, tableParams]);
 
   useEffect(() => {
-    if (!jsonData) navigate('/');
-  }, [jsonData]);
-
+    if (!data || !columnsDef) {
+      navigate('/');
+      notification.error({
+        message: 'Invalid format of excel',
+      });
+    }
+  }, [data, columnsDef, navigate]);
   return (
-    <div className="">
+    <div className="flex justify-evenly content-center self-center items-center w-full flex-col h-full">
       <ErrorBoundary FallbackComponent={ErrorFallback}>
         <Suspense
           fallback={
@@ -155,7 +162,7 @@ const Analytics = ({ jsonData, revenueType, setOptions }) => {
             listOfRevenue={listOfRevenue}
             jsonData={
               jsonData
-                ? jsonData.filter((el) => el.sheetName === 'Data')[0].data
+                ? getDataFromRes(jsonData, 'Data', 'data', 'sheetName')
                 : null
             }
           />

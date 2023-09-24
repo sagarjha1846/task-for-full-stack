@@ -34,7 +34,7 @@ const ErrorFallback = ({ error }) => {
     }
   }, [error]);
   return (
-    <div>
+    <div className="w-screen h-screen flex justify-center items-center content-center">
       <p>Something went wrong.</p>
       <pre>{error?.message}</pre>
     </div>
