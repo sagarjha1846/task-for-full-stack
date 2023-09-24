@@ -169,7 +169,7 @@ const GraphComponent = ({
   };
 
   return (
-    <div className="p-5 rounded-md shadow-md w-full bg-white">
+    <div className="p-2 rounded-md shadow-md w-full bg-white">
       <div className="p-3 w-full flex justify-between align-middle content-center self-center items-center text-2xl font-bold  !font-sans flex-wrap gap-5">
         <div className="gap-4 flex justify-evenly align-middle content-center self-center items-center text-xl font-bold !font-sans">
           <Button

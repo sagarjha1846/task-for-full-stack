@@ -58,7 +58,7 @@ const Home = () => {
           </div>
         </div>
       </Header>
-      <Content className=" bg-slate-200 w-full h-[100%] px-5 py-5">
+      <Content className=" bg-slate-200 w-full h-[100%] px-5">
         <Routes>
           <Route
             path="/"

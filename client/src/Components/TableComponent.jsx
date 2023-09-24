@@ -14,7 +14,7 @@ const TableComponent = (props) => {
   };
 
   return (
-    <div className="w-full p-5 rounded-md shadow-md bg-white">
+    <div className="w-full p-2 rounded-md shadow-md bg-white">
       <Table
         className="w-full"
         columns={columnsDef}

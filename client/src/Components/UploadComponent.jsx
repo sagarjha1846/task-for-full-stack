@@ -47,7 +47,7 @@ const UploadComponent = ({ setJsonData }) => {
   };
 
   return (
-    <div className="w-full h-full shadow-sm rounded-md p-5 bg-white flex justify-between align-middle content-center flex-col">
+    <div className="w-full my-5 mx-auto h-full shadow-sm rounded-md px-5 bg-white flex justify-evenly align-middle content-center flex-col">
       <h1 className="text-2xl ">Upload the Excel here!</h1>
       <Upload
         accept=".xlsx, .xls" // Specify the accepted file extensions
